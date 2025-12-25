@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Resend Email Merchant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>📩 Resend Email Merchant</h2>
+
+    <input type="email" id="merchantEmail" placeholder="Nhập email merchant">
+    <button onclick="searchEmails()">Tìm email</button>
+
+    <table id="emailTable">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>From</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+function searchEmails() {
+    const merchantEmail = document.getElementById("merchantEmail").value;
+
+    fetch("/search", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ merchant_email: merchantEmail })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const tbody = document.querySelector("#emailTable tbody");
+        tbody.innerHTML = "";
+
+        data.forEach(mail => {
+            const row = `
+                <tr>
+                    <td>${mail.subject}</td>
+                    <td>${mail.from}</td>
+                    <td>${mail.date}</td>
+                    <td>
+                        <button onclick="resend('${mail.id}')">Resend</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    });
+}
+
+function resend(emailId) {
+    const merchantEmail = document.getElementById("merchantEmail").value;
+
+    fetch("/resend", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            email_id: emailId,
+            merchant_email: merchantEmail
+        })
+    })
+    .then(res => res.json())
+    .then(() => alert("✅ Resend email thành công"));
+}
+</script>
+
+</body>
+</html>
