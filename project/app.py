@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import imaplib
 import smtplib
 import email
+import os
 from email.header import decode_header
 from email.mime.text import MIMEText
 
@@ -10,8 +11,10 @@ SMTP_HOST = "smtp.gmail.com"
 IMAP_PORT = 993
 SMTP_PORT = 587
 
-EMAIL_ACCOUNT = "thongbaokh@vimo.vn"
-EMAIL_PASSWORD = "jelh lqgh gfrm xzyh"
+# EMAIL_ACCOUNT = "thongbaokh@vimo.vn"
+# EMAIL_PASSWORD = "jelh lqgh gfrm xzyh"
+EMAIL_ACCOUNT = os.getenv("EMAIL_ACCOUNT")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 app = Flask(__name__)
 
